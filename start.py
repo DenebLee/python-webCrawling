@@ -20,9 +20,9 @@ class Crawler:
         self.date = str(date.today())
 
         # 검색어 입력 및 중복 검사
-        self.query = input("입력: ")
+        self.query = input(" 원하는 이미지를 입력해주세요 ")
         while self.checking(self.query) is True:
-            self.query = input("입력: ")
+            self.query = input("원하는 이미지를 입력해주세요 ")
 
         # 드라이버 경로 지정 (Chrome)
         self.driver = webdriver.Chrome("chromedriver.exe")
@@ -30,23 +30,19 @@ class Crawler:
         # clickAndRetrieve() 과정에서 urlretrieve이 너무 오래 걸릴 경우를 대비해 타임 아웃 지정
         socket.setdefaulttimeout(30)
 
-        # 크롤링한 이미지 수
+        # 크롤링한 이미지 수 초기화함
         self.crawled_count = 0
 
 
     def scroll_down(self):
         scroll_count = 0
-
-        print("> 스크롤 다운 시작")
-
-        # 스크롤 위치값 얻고 last_height 에 저장
+        # 스크롤 위치값 얻고 last_height 에 저장함
         last_height = self.driver.execute_script("return document.body.scrollHeight")
 
         # 결과 더보기 버튼을 클릭했는지 유무
         after_click = False
 
         while True:
-            print(f"> 스크롤 횟수: {scroll_count}")
             # 스크롤 다운
             self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             scroll_count += 1
@@ -62,7 +58,6 @@ class Crawler:
 
                 # 결과 더보기 버튼을 클릭한적이 있는 경우
                 if after_click is True:
-                    print("> 스크롤 다운 종료")
                     break
 
                 # 결과 더보기 버튼을 클릭한적이 없는 경우
@@ -117,7 +112,7 @@ class Crawler:
         # class_name에 공백이 있는 경우 여러 클래스가 있는 것이므로 아래와 같이 css_selector로 찾음
         img_list = div.find_elements_by_css_selector(".rg_i.Q4LuWd")
 
-        # 다운로드 디렉토리 생성
+        # 다운로드 디렉토리 생성(추가적으로 안해도되는데 보기쉬우라고 설정해둠)
         os.makedirs(self.path + '/' + self.date + '/' + self.query)
         print(f"> {self.path}/{self.date}/{self.query} 생성")
 
@@ -202,3 +197,4 @@ class Crawler:
 crawler = Crawler()
 crawler.crawling()
 crawler.filtering(350)
+os.system('pause')
